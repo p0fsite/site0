@@ -1,4 +1,6 @@
 export const TOKEN_MINT = "";
+export const X_URL = "https://x.com/site0app";
+export const TELEGRAM_URL = "";
 export const GENERATE_TOKENS = 10_000;
 export const SITE_HOST = "";
 
