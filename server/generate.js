@@ -29,9 +29,15 @@ const SYSTEM = `You build one website from what the user wrote. Return one finis
 The user may write only one sentence. You still ship a finished site.
 
 Rules:
-- One page a visitor can read. Use a name, the line they wrote, and the facts from the prompt, such as a price, a time, a place, or a door.
-- Do not invent a second page, a site map, or facts they did not write.
-- Use colors the prompt names. If it names none, use a dark page (#15161b), near-white type (#f4f4f5), a mint band (#86efac), and a charcoal panel (#1c1d24).
+- One page a visitor can read. Use the site name and the facts they stated, such as a price, a time, a place, or a door.
+- Instructions are not page copy. Never print "I want a website", "like the example", "like the link I sent", or "the project name is".
+- If the request names the project, that name is the title and the only brand on the page.
+- A URL is an example to follow, not a line to publish, unless they explicitly ask to show that address.
+- When a reference page or its screenshot is attached, rebuild that layout: the same kinds of regions, in the same order, with a similar density, type, and color. Put the user's site name where the reference shows its brand. Do not copy account emails, balances, or private data. Do not invent prices, phone numbers, or claims that neither the user nor the reference shows.
+- If the reference is a sign-in screen, build a sign-in screen in that style under the user's site name. Do not pretend a visitor is already signed in.
+- If they gave only a name, still ship a finished page for that name. Do not paste their prompt into the page.
+- Do not invent a second page, a site map, or facts they did not write and the reference does not show.
+- Use colors the prompt names. If it names none, follow the reference. If there is no reference, use a dark page (#15161b), near-white type (#f4f4f5), a mint band (#86efac), and a charcoal panel (#1c1d24).
 - Do not draw a character, a creature, or a ball. Do not use the word Pokemon.
 - Write in English. Keep every name, price, time, and place exactly as written.
 - If the user describes records, a form, bookings, orders, messages, or a Database block, fill the database array. Each item is one collection: a short lowercase name and the field names visitors type. If nothing is stored, return an empty database array.
@@ -46,6 +52,7 @@ const REVISE = `You already built this site. Revise it and return the full HTML 
 
 Rules:
 - Change only what the latest note asks for. Leave every other line, color, and fact as it is.
+- Do not print the change note itself.
 - Keep it one website page. Do not add pages the note did not ask for.
 - Keep any database collection the page already stores. Add or remove a collection only when the note asks. If nothing is stored, return an empty database array.
 - Keep the site in English. Keep names, prices, times, and places unless the note changes them.
@@ -436,13 +443,90 @@ export async function generatePage(prompt, apiKey, html = "", brief = "") {
   return job;
 }
 
-function userMessage(text, html, brief) {
-  if (!html) return text.slice(0, 2000);
-  const history = brief ? `Brief so far:\n${brief}\n\n` : "";
-  return `${history}Current HTML:\n${html}\n\nApply this change. Keep everything the note does not mention.\n${text.slice(0, 2000)}`;
+const URL_IN_PROMPT = /https?:\/\/[^\s<>"')\]]+/gi;
+
+export function interpretPrompt(text) {
+  const urls = [];
+  for (const match of String(text || "").matchAll(URL_IN_PROMPT)) {
+    const url = match[0].replace(/[.,;:!?]+$/g, "");
+    if (url && !urls.includes(url)) urls.push(url);
+  }
+  const named = String(text || "").match(
+    /\b(?:project|site|brand|business|shop|restaurant|page)\s+name\s+(?:is\s+|called\s+)?["“']?([A-Za-z0-9][A-Za-z0-9 ._-]{0,48})/i,
+  );
+  const called = String(text || "").match(/\b(?:called|named)\s+["“']?([A-Za-z0-9][A-Za-z0-9_-]{0,40})/i);
+  const name = (named?.[1] || called?.[1] || "").replace(/[.\s]+$/g, "").slice(0, 80);
+  return { name, urls: urls.slice(0, 1) };
 }
 
-async function requestPage(text, apiKey, html = "", brief = "") {
+function printsInstructions(html, prompt) {
+  const plain = String(html || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+  const source = String(prompt || "").toLowerCase();
+  const markers = [
+    "i want make a website",
+    "i want to make a website",
+    "like example that i sent",
+    "like the example",
+    "like the link",
+    "project name called",
+    "the project name",
+  ];
+  return markers.some((marker) => source.includes(marker) && plain.includes(marker));
+}
+
+function userMessage(text, html, brief, reference = null, extra = "") {
+  if (html) {
+    const history = brief ? `Brief so far:\n${brief}\n\n` : "";
+    return `${history}Current HTML:\n${html}\n\nApply this change. Keep everything the note does not mention.\n${text.slice(0, 2000)}`;
+  }
+  const read = interpretPrompt(text);
+  const instructional = Boolean(read.urls.length || read.name || /\b(i want|make a website|like the|like this|like example)\b/i.test(text));
+  if (!instructional && !reference) return text.slice(0, 2000);
+  const lines = ["Build one new site from this request. Do not print the instructions."];
+  if (read.name) lines.push(`Site name: ${read.name}. That is the only brand on the page.`);
+  if (reference?.url) {
+    lines.push(`Reference page: ${reference.url}`);
+    lines.push(
+      reference.image
+        ? "A screenshot of that page is attached. Match its layout, sections, and color. Use the site name above in place of the reference brand."
+        : "Use the visible text below as the example. Match its sections. Use the site name above in place of the reference brand.",
+    );
+    lines.push("Do not copy account emails, balances, or private data. Do not print this request or the reference URL.");
+    if (reference.text) lines.push(`Visible text from the reference:\n${reference.text}`);
+  } else if (read.urls.length) {
+    lines.push(
+      `The user pointed at ${read.urls[0]} as an example. That page could not be opened. Use the site name, and do not print the instructions or the URL.`,
+    );
+  }
+  if (extra) lines.push(extra);
+  lines.push(`Request:\n${text.slice(0, 2000)}`);
+  const content = lines.join("\n\n");
+  if (!reference?.image) return content;
+  return [
+    { type: "text", text: content },
+    {
+      type: "image_url",
+      image_url: { url: `data:image/jpeg;base64,${reference.image}`, detail: "high" },
+    },
+  ];
+}
+
+async function loadReference(url) {
+  try {
+    const { readReference } = await import("./preview.js");
+    return await Promise.race([
+      readReference(url),
+      new Promise((resolve) => setTimeout(() => resolve(null), 22000)),
+    ]);
+  } catch {
+    return null;
+  }
+}
+
+async function complete(apiKey, html, message) {
   let response;
   try {
     response = await fetch("https://api.x.ai/v1/chat/completions", {
@@ -457,7 +541,7 @@ async function requestPage(text, apiKey, html = "", brief = "") {
         reasoning_effort: "low",
         messages: [
           { role: "system", content: html ? REVISE : SYSTEM },
-          { role: "user", content: userMessage(text, html, brief) },
+          { role: "user", content: message },
         ],
         response_format: {
           type: "json_schema",
@@ -483,13 +567,30 @@ async function requestPage(text, apiKey, html = "", brief = "") {
     console.error("Grok generate failed:", response.status, detail.slice(0, 180));
     const error = new Error(publicError(response.status, detail));
     error.status = 502;
+    error.vision = response.status === 400 && Array.isArray(message);
     error.retry = response.status === 503 || response.status === 429;
     throw error;
+  }
+  return data;
+}
+
+async function requestPage(text, apiKey, html = "", brief = "", reference = null, extra = "") {
+  let message = userMessage(text, html, brief, reference, extra);
+  let data;
+  try {
+    data = await complete(apiKey, html, message);
+  } catch (error) {
+    if (!error.vision) throw error;
+    message = userMessage(text, html, brief, reference ? { ...reference, image: "" } : null, extra);
+    data = await complete(apiKey, html, message);
   }
 
   const written = pageText(data).replace(/^```json\s*|```$/g, "").trim();
   try {
-    return sanitizePage(JSON.parse(written), text);
+    const page = sanitizePage(JSON.parse(written), text);
+    const read = html ? { name: "" } : interpretPrompt(text);
+    if (read.name) page.title = read.name;
+    return page;
   } catch {
     const error = new Error("The page came back in a shape we could not use.");
     error.status = 502;
@@ -504,10 +605,23 @@ async function writePage(text, apiKey, html = "", brief = "") {
     throw error;
   }
 
+  const example = html ? "" : interpretPrompt(text).urls[0] || "";
+  const reference = example ? await loadReference(example) : null;
   let last;
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
-      return await requestPage(text, apiKey, html, brief);
+      const page = await requestPage(text, apiKey, html, brief, reference);
+      if (!html && printsInstructions(page.html, text)) {
+        return requestPage(
+          text,
+          apiKey,
+          html,
+          brief,
+          reference,
+          "The last draft printed the user's instructions. Delete those sentences. Keep the site name and the layout.",
+        );
+      }
+      return page;
     } catch (error) {
       last = error;
       if (!error.retry) throw error;

@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import puppeteer from "puppeteer-core";
@@ -160,22 +161,26 @@ function remember(target, buffer) {
   if (cache.size > 8) cache.delete(cache.keys().next().value);
 }
 
+async function arm(page) {
+  await page.setUserAgent(BROWSER_HEADERS["user-agent"]);
+  await page.setRequestInterception(true);
+  page.on("request", async (request) => {
+    const dest = request.url();
+    if (dest.startsWith("data:") || dest.startsWith("blob:")) {
+      await request.continue().catch(() => {});
+      return;
+    }
+    const allowed = await publicTarget(dest);
+    if (!allowed) await request.abort().catch(() => {});
+    else await request.continue().catch(() => {});
+  });
+}
+
 async function shoot(target) {
   const chrome = await getBrowser();
   const page = await chrome.newPage();
   try {
-    await page.setUserAgent(BROWSER_HEADERS["user-agent"]);
-    await page.setRequestInterception(true);
-    page.on("request", async (request) => {
-      const dest = request.url();
-      if (dest.startsWith("data:") || dest.startsWith("blob:")) {
-        await request.continue().catch(() => {});
-        return;
-      }
-      const allowed = await publicTarget(dest);
-      if (!allowed) await request.abort().catch(() => {});
-      else await request.continue().catch(() => {});
-    });
+    await arm(page);
     await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
     await page.goto(target, { waitUntil: "networkidle2", timeout: 25000 }).catch(async () => {
       await page.goto(target, { waitUntil: "domcontentloaded", timeout: 25000 });
@@ -195,6 +200,86 @@ async function shoot(target) {
   } finally {
     await page.close().catch(() => {});
   }
+}
+
+function visibleText(html) {
+  return String(html || "")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 3500);
+}
+
+async function textReference(target) {
+  const { response, url } = await fetchPublic(target, {
+    headers: { ...BROWSER_HEADERS, accept: "text/html,application/xhtml+xml" },
+    signal: AbortSignal.timeout(12000),
+  });
+  const type = response.headers.get("content-type") || "";
+  if (!response.ok || !/text\/html|application\/xhtml|text\/plain/i.test(type)) {
+    await response.body?.cancel();
+    return { url, text: "", image: "" };
+  }
+  const html = (await response.text()).slice(0, 400000);
+  return { url, text: visibleText(html), image: "" };
+}
+
+async function look(target) {
+  const chrome = await getBrowser();
+  const page = await chrome.newPage();
+  try {
+    await arm(page);
+    await page.setViewport({ width: 1280, height: 800, deviceScaleFactor: 1 });
+    await page.goto(target, { waitUntil: "networkidle2", timeout: 20000 }).catch(async () => {
+      await page.goto(target, { waitUntil: "domcontentloaded", timeout: 20000 });
+    });
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    const seen = await page.evaluate(() => {
+      const bits = [];
+      const title = (document.title || "").replace(/\s+/g, " ").trim();
+      if (title) bits.push(title);
+      document.querySelectorAll("h1,h2,h3,button,a,label").forEach((node) => {
+        const line = (node.innerText || "").replace(/\s+/g, " ").trim();
+        if (line && line.length < 80 && bits.length < 48) bits.push(line);
+      });
+      const body = (document.body?.innerText || "").replace(/\s+/g, " ").trim().slice(0, 2500);
+      return `${bits.join("\n")}\n\n${body}`.slice(0, 3500);
+    });
+    const jpeg = Buffer.from(await page.screenshot({ type: "jpeg", quality: 42 }));
+    return {
+      url: target,
+      text: seen,
+      image: jpeg.length <= 1_600_000 ? jpeg.toString("base64") : "",
+    };
+  } finally {
+    await page.close().catch(() => {});
+  }
+}
+
+export function readReference(target) {
+  const job = queue.then(async () => {
+    const safe = await publicTarget(target);
+    if (!safe) return null;
+    if (existsSync(CHROME)) {
+      try {
+        return await look(safe);
+      } catch {
+        // A public HTML fetch still gives the model the example's words.
+      }
+    }
+    try {
+      return await textReference(safe);
+    } catch {
+      return null;
+    }
+  });
+  queue = job.then(
+    () => {},
+    () => {},
+  );
+  return job;
 }
 
 export function capture(target) {
