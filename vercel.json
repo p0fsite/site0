@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "api/generate.js": {
+      "maxDuration": 120
+    },
+    "api/publish.js": {
+      "maxDuration": 60
+    },
+    "api/frame.js": {
+      "maxDuration": 30
+    },
+    "api/can-frame.js": {
+      "maxDuration": 30
+    }
+  },
+  "proxy": {
+    "entrypoint": "proxy.js",
+    "matcher": ["/((?!api/).*)"]
+  }
+}
