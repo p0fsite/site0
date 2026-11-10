@@ -1,7 +1,9 @@
 {
   "functions": {
     "api/generate.js": {
-      "maxDuration": 120
+      "maxDuration": 180,
+      "memory": 2048,
+      "includeFiles": "node_modules/@sparticuz/chromium/bin/**"
     },
     "api/publish.js": {
       "maxDuration": 60

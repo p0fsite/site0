@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
+import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
 
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -145,11 +146,20 @@ export async function canFrame(target) {
 
 async function getBrowser() {
   if (browser?.connected) return browser;
-  browser = await puppeteer.launch({
-    executablePath: CHROME,
-    headless: true,
-    args: ["--disable-blink-features=AutomationControlled", "--hide-scrollbars"],
-  });
+  if (existsSync(CHROME)) {
+    browser = await puppeteer.launch({
+      executablePath: CHROME,
+      headless: true,
+      args: ["--disable-blink-features=AutomationControlled", "--hide-scrollbars"],
+    });
+  } else {
+    chromium.setGraphicsMode = false;
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    });
+  }
   browser.on("disconnected", () => {
     browser = null;
   });
@@ -262,12 +272,10 @@ export function readReference(target) {
   const job = queue.then(async () => {
     const safe = await publicTarget(target);
     if (!safe) return null;
-    if (existsSync(CHROME)) {
-      try {
-        return await look(safe);
-      } catch {
-        // A public HTML fetch still gives the model the example's words.
-      }
+    try {
+      return await look(safe);
+    } catch {
+      // A public HTML fetch still gives the model the example's words.
     }
     try {
       return await textReference(safe);

@@ -29,23 +29,24 @@ const SYSTEM = `You build one website from what the user wrote. Return one finis
 The user may write only one sentence. You still ship a finished site.
 
 Rules:
-- One page a visitor can read. Use the site name and the facts they stated, such as a price, a time, a place, or a door.
+- One page a visitor can read. Keep the facts they stated. When they point at an example, that example supplies the layout.
 - Instructions are not page copy. Never print "I want a website", "like the example", "like the link I sent", or "the project name is".
-- If the request names the project, that name is the title and the only brand on the page.
+- If the request names the project, that name is the title. It is not the text of every section.
 - A URL is an example to follow, not a line to publish, unless they explicitly ask to show that address.
-- When a reference page or its screenshot is attached, rebuild that layout: the same kinds of regions, in the same order, with a similar density, type, and color. Put the user's site name where the reference shows its brand. Do not copy account emails, balances, or private data. Do not invent prices, phone numbers, or claims that neither the user nor the reference shows.
+- When a reference page or its screenshot is attached, that picture is the layout. Rebuild the same regions in the same order and at a similar size: navigation, headings, cards, tables, buttons, and the space between them. Swap the reference brand for the user's site name. Keep the reference's section labels. A list or table keeps its columns and a few sample rows. Do not copy wallet addresses, private balances, or account emails. Do not print the request or the URL.
+- The site name is the brand in the header and the document title. Do not repeat it in every box, heading, or sentence.
 - If the reference is a sign-in screen, build a sign-in screen in that style under the user's site name. Do not pretend a visitor is already signed in.
-- If they gave only a name, still ship a finished page for that name. Do not paste their prompt into the page.
-- Do not invent a second page, a site map, or facts they did not write and the reference does not show.
-- Use colors the prompt names. If it names none, follow the reference. If there is no reference, use a dark page (#15161b), near-white type (#f4f4f5), a mint band (#86efac), and a charcoal panel (#1c1d24).
-- Do not draw a character, a creature, or a ball. Do not use the word Pokemon.
+- If they gave only a name and no reference, ship a finished page for that name. Do not paste their prompt into the page.
+- Do not add a second page they did not ask for. A reference that is one long page stays one long page.
+- Use colors the prompt names. If it names none, follow the reference colors. If there is no reference, use a dark page (#15161b), near-white type (#f4f4f5), a mint band (#86efac), and a charcoal panel (#1c1d24).
+- Do not draw a character, a creature, or a ball. Do not use the word Pokemon. Do not draw a fake browser window, address bar, or close button.
 - Write in English. Keep every name, price, time, and place exactly as written.
 - If the user describes records, a form, bookings, orders, messages, or a Database block, fill the database array. Each item is one collection: a short lowercase name and the field names visitors type. If nothing is stored, return an empty database array.
 - Do not invent a save script. The page runtime saves any form marked data-p0k-save. You may omit those forms; the runtime adds them from the database array.
 - A sentence that only refuses something, such as "no phone number", is an instruction. Do not print it.
 - The site is one element: <section class="view" id="home">...</section>. Put the whole page inside it.
 - html is a complete document: doctype, head, one style tag, and body. No JavaScript. No external stylesheets or scripts.
-- Make the site look finished at phone width.
+- Match the reference width. A wide example stays wide. With no reference, the page still reads on a phone.
 - title is only the site name.`;
 
 const REVISE = `You already built this site. Revise it and return the full HTML document in the html field.
@@ -459,6 +460,19 @@ export function interpretPrompt(text) {
   return { name, urls: urls.slice(0, 1) };
 }
 
+function nameStamp(html, name) {
+  const brand = String(name || "").trim().toLowerCase();
+  if (brand.length < 3) return false;
+  const words = String(html || "")
+    .replace(/<[^>]+>/g, " ")
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+  if (words.length < 8) return false;
+  const hits = words.filter((word) => word === brand).length;
+  return hits >= 4 && hits / words.length > 0.2;
+}
+
 function printsInstructions(html, prompt) {
   const plain = String(html || "")
     .replace(/<[^>]+>/g, " ")
@@ -467,6 +481,7 @@ function printsInstructions(html, prompt) {
   const source = String(prompt || "").toLowerCase();
   const markers = [
     "i want make a website",
+    "i want make site",
     "i want to make a website",
     "like example that i sent",
     "like the example",
@@ -486,13 +501,15 @@ function userMessage(text, html, brief, reference = null, extra = "") {
   const instructional = Boolean(read.urls.length || read.name || /\b(i want|make a website|like the|like this|like example)\b/i.test(text));
   if (!instructional && !reference) return text.slice(0, 2000);
   const lines = ["Build one new site from this request. Do not print the instructions."];
-  if (read.name) lines.push(`Site name: ${read.name}. That is the only brand on the page.`);
+  if (read.name) {
+    lines.push(`Site name: ${read.name}. Put that name in the header. Do not use it as the text of every section.`);
+  }
   if (reference?.url) {
     lines.push(`Reference page: ${reference.url}`);
     lines.push(
       reference.image
-        ? "A screenshot of that page is attached. Match its layout, sections, and color. Use the site name above in place of the reference brand."
-        : "Use the visible text below as the example. Match its sections. Use the site name above in place of the reference brand.",
+        ? "The attached screenshot is the page to rebuild. Copy its structure, spacing, and colors. Replace only the brand with the site name. Do not collapse it into a title and two boxes."
+        : "Use the visible text below as the example. Rebuild those sections in that order. Replace only the brand with the site name.",
     );
     lines.push("Do not copy account emails, balances, or private data. Do not print this request or the reference URL.");
     if (reference.text) lines.push(`Visible text from the reference:\n${reference.text}`);
@@ -611,14 +628,17 @@ async function writePage(text, apiKey, html = "", brief = "") {
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
       const page = await requestPage(text, apiKey, html, brief, reference);
-      if (!html && printsInstructions(page.html, text)) {
+      const stamped = !html && nameStamp(page.html, interpretPrompt(text).name);
+      if (!html && (printsInstructions(page.html, text) || stamped)) {
         return requestPage(
           text,
           apiKey,
           html,
           brief,
           reference,
-          "The last draft printed the user's instructions. Delete those sentences. Keep the site name and the layout.",
+          stamped
+            ? "The last draft repeated the site name in every region. Rebuild the reference layout. The name appears as the brand, not as every heading."
+            : "The last draft printed the user's instructions. Delete those sentences. Keep the site name and the layout.",
         );
       }
       return page;
