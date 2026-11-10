@@ -24,35 +24,35 @@ const SCHEMA = {
   required: ["title", "html", "database"],
 };
 
-const SYSTEM = `You build one card, not a website. Return one finished HTML document in the html field. The card is the whole page. A person should be able to screenshot it and post it.
+const SYSTEM = `You build one website from what the user wrote. Return one finished HTML document in the html field. That document is the site.
 
-The user may write only one sentence. You still ship a finished card.
+The user may write only one sentence. You still ship a finished site.
 
 Rules:
-- One screen. No navigation row, no second page, no footer, no site map.
-- Center one card on the page. Give it a thick dark border and a hard offset shadow. On the card: a name, one line, and at most four facts taken from the prompt, such as a price, a time, a place, or a door.
-- Use colors the prompt names. If it names none, use a dark page (#15161b), near-white type (#f4f4f5), a mint band (#86efac), and a charcoal card (#1c1d24).
+- One page a visitor can read. Use a name, the line they wrote, and the facts from the prompt, such as a price, a time, a place, or a door.
+- Do not invent a second page, a site map, or facts they did not write.
+- Use colors the prompt names. If it names none, use a dark page (#15161b), near-white type (#f4f4f5), a mint band (#86efac), and a charcoal panel (#1c1d24).
 - Do not draw a character, a creature, or a ball. Do not use the word Pokemon.
-- Write in English. Keep every name, price, time, and place exactly as written. Do not invent extra pages to fill.
+- Write in English. Keep every name, price, time, and place exactly as written.
 - If the user describes records, a form, bookings, orders, messages, or a Database block, fill the database array. Each item is one collection: a short lowercase name and the field names visitors type. If nothing is stored, return an empty database array.
 - Do not invent a save script. The page runtime saves any form marked data-p0k-save. You may omit those forms; the runtime adds them from the database array.
 - A sentence that only refuses something, such as "no phone number", is an instruction. Do not print it.
-- The card is one element: <section class="view" id="home">...</section>. Put the whole card inside it.
+- The site is one element: <section class="view" id="home">...</section>. Put the whole page inside it.
 - html is a complete document: doctype, head, one style tag, and body. No JavaScript. No external stylesheets or scripts.
-- Make the card look finished at phone width. The card stays one screen.
-- title is only the card name.`;
+- Make the site look finished at phone width.
+- title is only the site name.`;
 
-const REVISE = `You already built this card. Revise it and return the full HTML document in the html field.
+const REVISE = `You already built this site. Revise it and return the full HTML document in the html field.
 
 Rules:
 - Change only what the latest note asks for. Leave every other line, color, and fact as it is.
-- Keep it one card on one screen. Do not grow it into a website, a nav, or extra pages.
+- Keep it one website page. Do not add pages the note did not ask for.
 - Keep any database collection the page already stores. Add or remove a collection only when the note asks. If nothing is stored, return an empty database array.
-- Keep the card in English. Keep names, prices, times, and places unless the note changes them.
+- Keep the site in English. Keep names, prices, times, and places unless the note changes them.
 - A sentence that only refuses something is an instruction. Do not print it.
 - Stay in this one file. Do not link to /docs, another file, or an empty page.
 - html is a complete document: doctype, head, one style tag, and body. No JavaScript. No external stylesheets or scripts.
-- title is only the card name.`;
+- title is only the site name.`;
 
 function clip(value, max) {
   return String(value || "")
@@ -172,7 +172,7 @@ const DATA_SCRIPT = `<script id="p0k-data">
     var site = slug();
     var lists = document.querySelectorAll('[data-p0k-list="' + name + '"], [data-p0f-list="' + name + '"]');
     if (!site) {
-      lists.forEach(function (node) { node.innerHTML = '<p class="p0k-empty">Records appear on the published card.</p>'; });
+      lists.forEach(function (node) { node.innerHTML = '<p class="p0k-empty">Records appear on the published site.</p>'; });
       return;
     }
     fetch("/api/data?slug=" + encodeURIComponent(site) + "&collection=" + encodeURIComponent(name))
@@ -189,7 +189,7 @@ const DATA_SCRIPT = `<script id="p0k-data">
     var status = form.querySelector("[data-p0k-status], [data-p0f-status]");
     var site = slug();
     if (!site) {
-      if (status) status.textContent = "Publish the card before saving a record.";
+      if (status) status.textContent = "Publish the site before saving a record.";
       return;
     }
     var record = {};
@@ -425,7 +425,7 @@ export async function generatePage(prompt, apiKey, html = "", brief = "") {
   const current = String(html || "").trim().slice(0, 80000);
   const history = String(brief || "").trim().slice(0, 4000);
   if (text.length < 3) {
-    const error = new Error(current ? "Write what to change." : "Write one sentence about the card.");
+    const error = new Error(current ? "Write what to change." : "Write one sentence about the site.");
     error.status = 400;
     throw error;
   }

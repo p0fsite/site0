@@ -98,17 +98,30 @@ export const examples = [
 
 export const docs = [
   {
+    slug: "who",
+    title: "Who it's for",
+    paragraph:
+      "site0 is for anyone who wants a website and does not know how to make one. You do not need to code, pick a design, or understand how the web is built. Describe the site in one sentence. site0 makes the page.",
+    steps: [
+      "This is for a shop, a clinic, a menu, a service, or any one-page site. If you can say what it does, that is enough.",
+      "You do not write code, buy hosting, or hire someone to design it. site0 turns your sentence into the page.",
+      "Read the page, fix a line that is wrong, then publish it and send the link.",
+    ],
+    example:
+      "Lane Coffee has hours and a price, and nobody there builds websites. “Open until 2. Milk is 4. Second door on the left.” becomes the page.",
+  },
+  {
     slug: "start",
     title: "Start",
     paragraph:
-      "You end up with one card and, after you publish, a link you can send. Until you publish, the card is only a preview on this screen.",
+      "You end up with one site and, after you publish, a link you can send. Until you publish, the site is only a preview on this screen.",
     steps: [
       "On the home page, paste a public link, or switch to Write it yourself and write one sentence: the name, the line, the price, the time, or the place.",
-      "Open the preview. A pasted link shows that site. A sentence comes back as one card.",
+      "Open the preview. A pasted link shows that site. A sentence comes back as one site.",
       "Read it. Fix a line that is wrong, then publish if you want a public link.",
     ],
     example:
-      "Paste a public page to study that site, or write “Lane Coffee. Open until 2. Milk is 4. Second door on the left.” to get that card.",
+      "Paste a public page to study that site, or write “Lane Coffee. Open until 2. Milk is 4. Second door on the left.” to get that site.",
   },
   {
     slug: "paste",
@@ -127,26 +140,26 @@ export const docs = [
     slug: "prompt",
     title: "Writing a prompt",
     paragraph:
-      "Write one sentence for the card. Name the place, then the line, the price, the time, or the door. site0 keeps what you wrote.",
+      "Write one sentence for the site. Name the place, then the line, the price, the time, or the door. site0 keeps what you wrote.",
     steps: [
       "Switch to Write it yourself.",
       "Start with the name. Then the line a visitor should see: a price, the hours, a place. Write it in English.",
       "Press the arrow. site0 keeps the names, prices, and times you wrote.",
-      "Under Database, write what a visitor can save, such as a name and a message. The published card stores those records and lists them.",
+      "Under Database, write what a visitor can save, such as a name and a message. The published site stores those records and lists them.",
       "Posting does not burn tokens until a contract is set.",
     ],
     example:
-      "“Lane Coffee. Open until 2. Black coffee 3, coffee with milk 4. Second door. No phone number.” The card stays in English and does not invent a phone number.",
+      "“Lane Coffee. Open until 2. Black coffee 3, coffee with milk 4. Second door. No phone number.” The site stays in English and does not invent a phone number.",
   },
   {
     slug: "edit",
-    title: "Changing the card",
+    title: "Changing the site",
     paragraph:
-      "When the card is built, you change it by writing what is wrong. The same card is updated. The earlier prompt stays listed above the box.",
+      "When the site is built, you change it by writing what is wrong. The same site is updated. The earlier prompt stays listed above the box.",
     steps: [
       "On the preview, read the prompt so far.",
       "In Change it, write only the correction. Say what should stay if the rest is already right.",
-      "Press Update the page. A card that is already live keeps its link.",
+      "Press Update the page. A site that is already live keeps its link.",
     ],
     example:
       "“Change the button to Order now. Make the coffee with milk 5. Leave the rest.” The name, the other prices, and the layout stay.",
@@ -155,47 +168,47 @@ export const docs = [
     slug: "publish",
     title: "Publishing",
     paragraph:
-      "Publish is what gives the card an address. Before that, the preview exists only in your browser.",
+      "Publish is what gives the site an address. Before that, the preview exists only in your browser.",
     steps: [
-      "From the preview, press Post this card.",
+      "From the preview, press Post this site.",
       "Connect a Solana wallet from the button at the top right.",
-      "Press Publish. Then copy the link, or open the card.",
+      "Press Publish. Then copy the link, or open the site.",
     ],
-    example: "A card titled Lane Coffee is published at /s/lane-coffee.",
+    example: "A site titled Lane Coffee is published at /s/lane-coffee.",
   },
   {
     slug: "pay",
     title: "Publishing for now",
     paragraph:
-      "There is no contract yet, so posting a card does not burn tokens. Connect a wallet, then publish.",
+      "There is no contract yet, so posting a site does not burn tokens. Connect a wallet, then publish.",
     steps: [
       "Press Connect wallet at the top right and pick the Solana wallet on this browser.",
       "On the publish screen, press Publish.",
-      "Copy the link once the card is saved.",
+      "Copy the link once the site is saved.",
     ],
-    example: "A card titled Lane Coffee goes live at /s/lane-coffee once the wallet is connected.",
+    example: "A site titled Lane Coffee goes live at /s/lane-coffee once the wallet is connected.",
   },
   {
     slug: "links",
     title: "The link",
     paragraph:
-      "A published card has one address. It works as soon as publish finishes.",
+      "A published site has one address. It works as soon as publish finishes.",
     steps: [
       "The link looks like /s/lane-coffee.",
-      "Copy it from the publish screen, or press Open the card.",
-      "Send that link. The card opens on that address.",
+      "Copy it from the publish screen, or press Open the site.",
+      "Send that link. The site opens on that address.",
     ],
-    example: "A card titled Lane Coffee opens at /s/lane-coffee.",
+    example: "A site titled Lane Coffee opens at /s/lane-coffee.",
   },
   {
     slug: "token",
     title: "The token",
     paragraph:
-      "site0 has no contract right now. Writing and posting a card does not burn tokens. A later change to a live card stays on the same link.",
+      "site0 has no contract right now. Writing and posting a site does not burn tokens. A later change to a live site stays on the same link.",
     steps: [
       "Connect a Solana wallet from the button at the top right.",
-      "Write the card, then publish it.",
-      "A later change to a live card keeps the link.",
+      "Write the site, then publish it.",
+      "A later change to a live site keeps the link.",
     ],
     example: "Lane Coffee is posted at /s/lane-coffee. No tokens leave the wallet.",
   },

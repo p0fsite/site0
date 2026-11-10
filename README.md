@@ -10,14 +10,14 @@
 
 <p align="center">
   Paste a page, or write one sentence.<br>
-  Get a card you can send.
+  Get a site you can send.
 </p>
 
 <p align="center">
   <img src="public/site0-x-pfp.png" alt="site0 mark" width="180">
 </p>
 
-## The card
+## The site
 
 A sentence becomes one screen. The name, the price, the hours, and the door stay as written. Nothing else gets invented.
 
@@ -25,12 +25,12 @@ A sentence becomes one screen. The name, the price, the hours, and the door stay
 Lane Coffee. Open until 2. Milk is 4. Second door on the left.
 ```
 
-Paste a public link when you want that page open in the frame. Switch to writing when you want the card.
+Paste a public link when you want that page open in the frame. Switch to writing when you want the site.
 
 ## Three steps
 
 1. Paste a link, or write the sentence.
-2. Read the card. Change a line if it is wrong.
+2. Read the site. Change a line if it is wrong.
 3. Connect a Solana wallet and publish. The link looks like `/s/lane-coffee`.
 
 There is no contract yet, so posting does not burn tokens. A later edit stays on the same link.
@@ -47,7 +47,7 @@ Open `http://127.0.0.1:5173`.
 
 | Key | Where it is used |
 | --- | --- |
-| `XAI_API_KEY` | The model that writes the card. Server only. |
+| `XAI_API_KEY` | The model that writes the site. Server only. |
 | `VITE_PRIVY_APP_ID` | Wallet login. |
 | `HF_CREDENTIALS` | Optional. Server only. `key-id:key-secret` |
 

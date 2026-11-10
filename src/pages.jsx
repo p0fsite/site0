@@ -74,7 +74,7 @@ export function Home() {
       });
       setDraft({ ...draft, url, reading, live: null });
     } else if (!writtenPrompt(draft)) {
-        setNotice("Write the card, or the records it should keep.");
+        setNotice("Write the site, or the records it should keep.");
       return;
     } else {
       setDraft((current) => ({ ...current, live: null }));
@@ -85,12 +85,12 @@ export function Home() {
 
   return (
     <main className="hero">
-      <p className="hero-name">site0</p>
-      <h1>{writing ? "Write a sentence. Get a card." : "Paste a site. Open it."}</h1>
+      <p className="hero-name"><span>site</span>0</p>
+      <h1>{writing ? "Write a sentence. Get a site." : "Paste a site. Open it."}</h1>
       <p className="sub">
         {writing
-          ? "Name it, then the line, the price, the time, or the place. site0 turns that into one card."
-          : "The page opens here so you can read it. A card comes from a sentence."}
+          ? "You do not need to know how a website is built. Write the name, the price, the hours, or the place. site0 makes the page."
+          : "Want a website and do not know where to start? Write one sentence, or paste a page you already like."}
       </p>
 
       <form className="composer" onSubmit={submit}>
@@ -219,7 +219,7 @@ export function Generating() {
 
 const WRITE_STEPS = [
   "Reading the sentence",
-  "Laying out the card",
+  "Laying out the site",
   "Writing the line",
 ];
 const LOAD_CELLS = 14;
@@ -319,7 +319,7 @@ function Writing() {
     <main className="narrow status-screen">
       <p className="eyebrow">Writing</p>
       <h1>
-        {error ? "The card did not get written." : paying ? "Approve the burn." : "Writing the card."}
+        {error ? "The site did not get written." : paying ? "Approve the burn." : "Writing the site."}
       </h1>
       {error ? (
         <p className="sub">{error}</p>
@@ -666,14 +666,14 @@ function BuiltPreview() {
         {posted ? <p className="warn">{posted}</p> : null}
         <p className="sub">
           {draft.live?.slug
-            ? "This card is already live. A change stays on the same link."
+            ? "This site is already live. A change stays on the same link."
             : tokenCharges()
-              ? "A change burns another 10,000 tokens, then the card updates."
-              : "A change updates the card. Nothing is burned."}
+              ? "A change burns another 10,000 tokens, then the site updates."
+              : "A change updates the site. Nothing is burned."}
         </p>
         <Dock>
           <button className="btn" type="button" onClick={() => navigate("/publish")}>
-            {draft.live?.slug ? "Update the live page" : "Post this card"}
+            {draft.live?.slug ? "Update the live page" : "Post this site"}
           </button>
         </Dock>
       </aside>
@@ -694,8 +694,8 @@ export function Preview() {
   if (draft.mode === "write") {
     return (
       <main className="narrow">
-        <h1>Write the card first.</h1>
-        <p className="sub">A card comes from one sentence. Nothing is posted until that card exists.</p>
+        <h1>Write the site first.</h1>
+        <p className="sub">A site comes from one sentence. Nothing is posted until that site exists.</p>
         <p className="after">
           <Link to="/" className="text">
             Write a sentence
@@ -723,7 +723,7 @@ export function Preview() {
             <li key={item}>{item}</li>
           ))}
         </ul>
-        <p className="sub">This is {reading.host}. A card comes from a sentence you write.</p>
+        <p className="sub">This is {reading.host}. A site comes from a sentence you write.</p>
         <Dock>
           <button
             className="btn"
@@ -733,7 +733,7 @@ export function Preview() {
               navigate("/");
             }}
           >
-            Write a card
+            Write a site
           </button>
         </Dock>
       </aside>
@@ -838,7 +838,7 @@ export function Publish() {
           <p className="live-link">{link}</p>
           <Dock>
             <button className="btn" type="button" onClick={openSite}>
-              Open the card
+              Open the site
             </button>
           </Dock>
           <p className="after">
@@ -861,13 +861,13 @@ export function Publish() {
             {kept
               ? "This link stays."
               : alreadyPaid
-                ? "This card is already paid for. Publish uses that."
+                ? "This site is already paid for. Publish uses that."
                 : tokenCharges()
                   ? address
                     ? "Posting burns 10,000 tokens from the wallet in the corner."
                     : "Connect a Solana wallet in the corner. Posting burns 10,000 tokens."
                   : address
-                    ? "Publish posts this card. No tokens are burned."
+                    ? "Publish posts this site. No tokens are burned."
                     : "Connect a Solana wallet in the corner, then publish."}
           </p>
           {domainNote ? <p className="warn">{domainNote}</p> : null}
@@ -886,9 +886,9 @@ export function Publish() {
 export function How() {
   useTitle("How it works · site0");
   const steps = [
-    "Paste a link to open that page, or write one sentence.",
-    "A sentence comes back as one card. Change a line if it is wrong.",
-    "Connect a Solana wallet and post the card.",
+    "You want a website. You do not need to code, or to know how one is built.",
+    "Write one sentence about the place, the price, or the hours. Or paste a page you like.",
+    "site0 builds the page. Publish it, then send the link.",
   ];
 
   return (
@@ -915,13 +915,13 @@ export function Flow() {
       <p className="eyebrow">Capital flow</p>
       <h1>Where a generate goes.</h1>
       <p className="sub">
-        There is no contract yet. Posting a card does not burn tokens, and nobody is paid.
+        There is no contract yet. Posting a site does not burn tokens, and nobody is paid.
       </p>
       <div className="flow-split">
         <article>
-          <p className="label">The card</p>
+          <p className="label">The site</p>
           <h2>Posted</h2>
-          <p>A connected wallet publishes the card. No tokens leave that wallet.</p>
+          <p>A connected wallet publishes the site. No tokens leave that wallet.</p>
         </article>
         <article>
           <p className="label">The contract</p>
@@ -933,7 +933,7 @@ export function Flow() {
       <ol className="steps">
         <li>
           <span>01</span>
-          <p>Someone writes one sentence. site0 turns it into a card.</p>
+          <p>Someone writes one sentence. site0 turns it into a site.</p>
         </li>
         <li>
           <span>02</span>
@@ -941,18 +941,18 @@ export function Flow() {
         </li>
         <li>
           <span>03</span>
-          <p>Publish saves the card. Nothing is burned.</p>
+          <p>Publish saves the site. Nothing is burned.</p>
         </li>
         <li>
           <span>04</span>
-          <p>The card opens at its link. The wallet that posted it can change it.</p>
+          <p>The site opens at its link. The wallet that posted it can change it.</p>
         </li>
       </ol>
       <h2 className="flow-title">Check it yourself</h2>
-      <p className="sub">Every posted card names the wallet that published it.</p>
+      <p className="sub">Every posted site names the wallet that published it.</p>
       <div className="flow-actions">
         <Link className="text" to="/history">
-          Card history
+          Site history
         </Link>
         <Link className="text" to="/docs/token">
           Read the docs
@@ -1037,9 +1037,9 @@ export function History() {
   return (
     <main className="wide">
       <p className="eyebrow">History</p>
-      <h1>Published cards.</h1>
+      <h1>Published sites.</h1>
       <p className="sub">
-        A new card does not burn tokens. Older burns stay listed below.
+        A new site does not burn tokens. Older burns stay listed below.
       </p>
       {error ? <p className="warn">{error}</p> : null}
       {!data && !error ? <p className="sub">Reading history.</p> : null}
@@ -1066,10 +1066,10 @@ export function History() {
             </div>
           </section>
           <section>
-            <h2 className="flow-title">Cards</h2>
-            {sites.length === 0 ? <p className="sub">No cards have been published yet.</p> : null}
+            <h2 className="flow-title">Sites</h2>
+            {sites.length === 0 ? <p className="sub">No sites have been published yet.</p> : null}
             {sites.length > 0 ? (
-              <p className="sub">The wallet that published a card can change it. The link stays.</p>
+              <p className="sub">The wallet that published a site can change it. The link stays.</p>
             ) : null}
             <div className="history-list">
               {sites.map((site) => {
@@ -1113,8 +1113,8 @@ export function Examples() {
   return (
     <main className="narrow">
       <p className="eyebrow">Examples</p>
-      <h1>Three cards.</h1>
-      <p className="sub">Each sentence becomes one card. Open it and site0 builds that card.</p>
+      <h1>Three sites.</h1>
+      <p className="sub">Each sentence becomes one site. Open it and site0 builds that site.</p>
       <div className="example-list">
         {examples.map((example) => (
           <Link key={example.id} to={`/examples/${example.id}`} className="example-row">
@@ -1163,11 +1163,11 @@ export function ExampleDetail() {
     <main className="narrow">
       <p className="eyebrow">{example.kind}</p>
       <h1>{example.title}</h1>
-      <p className="sub">This sentence is the card.</p>
+      <p className="sub">This sentence is the site.</p>
       <p className="prompt-block">{example.prompt}</p>
       <Dock>
         <button className="btn" type="button" onClick={build}>
-          Make this card
+          Make this site
         </button>
       </Dock>
     </main>
@@ -1261,7 +1261,7 @@ export function LiveSite() {
 
   return (
     <div className="live">
-      <p>This card is not published.</p>
+      <p>This site is not published.</p>
       <footer className="badge">
         <Link to="/">site0</Link>
         <span>{cardPath(slug)}</span>

@@ -32,7 +32,7 @@ export default function App() {
           <Route path="/history" element={<History />} />
           <Route path="/examples" element={<Examples />} />
           <Route path="/examples/:id" element={<ExampleDetail />} />
-          <Route path="/docs" element={<Navigate to="/docs/start" replace />} />
+          <Route path="/docs" element={<Navigate to="/docs/who" replace />} />
           <Route path="/docs/:slug" element={<Docs />} />
         </Route>
       </Routes>

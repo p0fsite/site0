@@ -155,5 +155,5 @@ async function handleSite(req, res) {
   const html = slug ? await readSiteHtml(slug) : ''
   res.statusCode = html ? 200 : 404
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
-  res.end(html || 'This card is not published.')
+  res.end(html || 'This site is not published.')
 }

@@ -8,7 +8,7 @@ function missing(slug) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${name}</title>
 <body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#15161b;color:#f4f4f5;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif">
-  <p>This card is not published.</p>
+  <p>This site is not published.</p>
 </body>
 </html>`;
 }

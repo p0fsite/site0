@@ -229,7 +229,7 @@ export async function gateGenerate({ wallet, signature, slug }) {
     const existing = await siteRow(site);
     if (existing?.wallet && existing.wallet === owner) return;
     if (existing?.wallet && existing.wallet !== owner) {
-      throw Object.assign(new Error("Only the wallet that published this card can change it."), { status: 403 });
+      throw Object.assign(new Error("Only the wallet that published this site can change it."), { status: 403 });
     }
   }
   await burnRow(signature, owner);
@@ -284,7 +284,7 @@ export async function publishPage(body) {
   if (!owner) throw Object.assign(new Error("Connect a Solana wallet, then publish."), { status: 401 });
   const existing = await siteRow(slug);
   if (existing?.wallet && existing.wallet !== owner) {
-    throw Object.assign(new Error("Only the wallet that published this card can change it."), { status: 403 });
+    throw Object.assign(new Error("Only the wallet that published this site can change it."), { status: 403 });
   }
   const ownerUpdate = Boolean(existing?.wallet && existing.wallet === owner);
   const burn = mintOn() && !ownerUpdate

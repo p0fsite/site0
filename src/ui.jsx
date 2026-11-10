@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { TOKEN_MINT } from "./content.js";
 import { ConnectWallet } from "./wallet.jsx";
 
 const links = [
   ["How it works", "/how"],
   ["Examples", "/examples"],
-  ["Docs", "/docs/start"],
+  ["Docs", "/docs/who"],
   ["Capital flow", "/flow"],
   ["History", "/history"],
 ];
@@ -114,6 +115,39 @@ function DotField() {
   return createPortal(<canvas ref={ref} className="dot-field" aria-hidden="true" />, document.body);
 }
 
+function ContractAddress() {
+  const mint = TOKEN_MINT.trim();
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    if (!mint) return;
+    try {
+      await navigator.clipboard.writeText(mint);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = mint;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.append(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  }
+
+  return (
+    <footer className="site-foot">
+      <button type="button" className="contract" onClick={copy}>
+        <span>{copied ? "Copied" : "Contract Address"}</span>
+        {mint ? <code>{mint}</code> : null}
+      </button>
+    </footer>
+  );
+}
+
 export function Shell() {
   const { pathname } = useLocation();
 
@@ -142,6 +176,7 @@ export function Shell() {
       <div key={pathname} className="stage">
         <Outlet />
       </div>
+      <ContractAddress />
     </div>
   );
 }
