@@ -29,15 +29,16 @@ const SYSTEM = `You build one website from what the user wrote. Return one finis
 The user may write only one sentence. You still ship a finished site.
 
 Rules:
-- One page a visitor can read. Keep the facts they stated. When they point at an example, that example supplies the layout.
+- One page a visitor can read. Read the whole request first and decide what this person's site is: a shop, a menu, a product, a studio, a clinic, or whatever they are actually describing. Then write that site.
 - Instructions are not page copy. Never print "I want a website", "like the example", "like the link I sent", or "the project name is".
-- If the request names the project, that name is the title. It is not the text of every section.
-- A URL is an example to follow, not a line to publish, unless they explicitly ask to show that address.
-- When a reference page or its screenshot is attached, that picture is the layout. Rebuild the same regions in the same order and at a similar size: navigation, headings, cards, tables, buttons, and the space between them. Swap the reference brand for the user's site name. Keep the reference's section labels. A list or table keeps its columns and a few sample rows. Do not copy wallet addresses, private balances, or account emails. Do not print the request or the URL.
-- The site name is the brand in the header and the document title. Do not repeat it in every box, heading, or sentence.
-- If the reference is a sign-in screen, build a sign-in screen in that style under the user's site name. Do not pretend a visitor is already signed in.
-- If they gave only a name and no reference, ship a finished page for that name. Do not paste their prompt into the page.
-- Do not add a second page they did not ask for. A reference that is one long page stays one long page.
+- A URL is one example they like. It can be any public website. Study the kind of page, how it is arranged, and how finished it looks. Use that as a guide for the user's own site. Do not print the address unless they explicitly ask to show it.
+- Do not reskin the example. Its name, headlines, prices, tables, rows, and product stay on that other site. Write new sections that belong to the user's project. Do not copy wallet addresses, private balances, or account emails.
+- If they named the project, that name is the brand in the header and the document title. It is not the text of every section.
+- If they did not name a project, choose a fitting name for the new site. Do not reuse the example's brand.
+- If they stated facts, keep those facts exact. Build the rest of a finished page around them. Do not invent a price, an address, or a claim when they already gave the facts.
+- If they gave only a name, or only an example, still ship a complete page a visitor can read. Do not stop at a title and two boxes, and do not paste their prompt into the page.
+- If the example is only a sign-in screen, take its visual style and build the site they asked for. Do not pretend a visitor is already signed in.
+- Do not add a second page they did not ask for. A long example can inspire a long page, and a short example can inspire a short one.
 - Use colors the prompt names. If it names none, follow the reference colors. If there is no reference, use a dark page (#15161b), near-white type (#f4f4f5), a mint band (#86efac), and a charcoal panel (#1c1d24).
 - Do not draw a character, a creature, or a ball. Do not use the word Pokemon. Do not draw a fake browser window, address bar, or close button.
 - Write in English. Keep every name, price, time, and place exactly as written.
@@ -508,8 +509,8 @@ function userMessage(text, html, brief, reference = null, extra = "") {
     lines.push(`Reference page: ${reference.url}`);
     lines.push(
       reference.image
-        ? "The attached screenshot is the page to rebuild. Copy its structure, spacing, and colors. Replace only the brand with the site name. Do not collapse it into a title and two boxes."
-        : "Use the visible text below as the example. Rebuild those sections in that order. Replace only the brand with the site name.",
+        ? "The attached screenshot is an example the user likes, not a page to copy. Work out what kind of website it is and how finished it looks. Then design their own site at that level, with new sections that fit their project. Do not reuse the example's name, headlines, prices, tables, or rows. Do not collapse the page into a title and two boxes."
+        : "The text below is what the example page says. Use it only to understand the kind of site. Write new copy for the user's project. Do not reuse those sentences, prices, or names.",
     );
     lines.push("Do not copy account emails, balances, or private data. Do not print this request or the reference URL.");
     if (reference.text) lines.push(`Visible text from the reference:\n${reference.text}`);
@@ -555,7 +556,7 @@ async function complete(apiKey, html, message) {
       signal: AbortSignal.timeout(120000),
       body: JSON.stringify({
         model: MODEL,
-        reasoning_effort: "low",
+        reasoning_effort: html ? "low" : "medium",
         messages: [
           { role: "system", content: html ? REVISE : SYSTEM },
           { role: "user", content: message },
@@ -637,8 +638,8 @@ async function writePage(text, apiKey, html = "", brief = "") {
           brief,
           reference,
           stamped
-            ? "The last draft repeated the site name in every region. Rebuild the reference layout. The name appears as the brand, not as every heading."
-            : "The last draft printed the user's instructions. Delete those sentences. Keep the site name and the layout.",
+            ? "The last draft repeated the site name, or copied the example. Write an original site for the user's project. The name appears as the brand only."
+            : "The last draft printed the user's instructions. Delete those sentences and write the site they asked for.",
         );
       }
       return page;

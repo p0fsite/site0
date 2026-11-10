@@ -118,25 +118,25 @@ export const docs = [
     paragraph:
       "You end up with one site and, after you publish, a link you can send. Until you publish, the site is only a preview on this screen.",
     steps: [
-      "On the home page, paste a public link, or switch to Write it yourself and write one sentence: the name, the line, the price, the time, or the place.",
-      "Open the preview. A pasted link shows that site. A sentence comes back as one site.",
+      "On the home page, paste any public link as an example, or switch to Write it yourself and write one sentence: the name, the line, the price, the time, or the place.",
+      "Open the preview. A pasted link comes back as a new site in that spirit. A sentence comes back as one site.",
       "Read it. Fix a line that is wrong, then publish if you want a public link.",
     ],
     example:
-      "Paste a public page to study that site, or write “Lane Coffee. Open until 2. Milk is 4. Second door on the left.” to get that site.",
+      "Paste a public page to use as the example, or write “Lane Coffee. Open until 2. Milk is 4. Second door on the left.” to get that site.",
   },
   {
     slug: "paste",
     title: "Pasting a reference link",
     paragraph:
-      "Paste the address of a public page. The preview opens that same page, so you can scroll it and press its links without leaving site0.",
+      "Paste the address of any public page you like. site0 looks at that page and builds a new site from it. The result is your page, not a copy of theirs.",
     steps: [
       "Copy a full address that starts with http:// or https://.",
       "Leave Paste a link selected, put the address in the field, and press the arrow.",
-      "After the short wait, the site sits in the frame. Clicks stay inside that frame.",
+      "After the wait, the preview is a new site in that spirit. Say what to change if the name or the details are wrong.",
     ],
     example:
-      "A public address opens that page in the preview, including its buttons. The field starts empty. Nothing is filled in for you.",
+      "A public address is an example. site0 writes a different site from it. The field starts empty. Nothing is filled in for you.",
   },
   {
     slug: "prompt",

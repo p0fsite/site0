@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { cardPath, docs, examples, pageFromDraft, readSite, slugify } from "./content.js";
+import { cardPath, docs, examples, readSite, slugify } from "./content.js";
 import { useDraft } from "./draft.jsx";
 import { Dock, Frame } from "./ui.jsx";
 import { forgetPayment, paidSignature, payForGenerate, tokenCharges } from "./pay.js";
@@ -38,7 +38,7 @@ function asUrl(value) {
 export function Home() {
   useTitle("site0");
   const navigate = useNavigate();
-  const { draft, setDraft, setPage, notice, setNotice } = useDraft();
+  const { draft, setDraft, notice, setNotice } = useDraft();
   const writing = draft.mode === "write";
 
   function update(key, value) {
@@ -66,13 +66,17 @@ export function Home() {
         navigate("/reference-failed");
         return;
       }
-      const reading = readSite(url);
-      setPage({
-        ...pageFromDraft(draft),
-        title: reading.name,
-        lede: reading.line,
+      setDraft({
+        ...draft,
+        mode: "write",
+        url,
+        prompt: `Build my own website, using ${url} as the example.`,
+        reading: null,
+        live: null,
       });
-      setDraft({ ...draft, url, reading, live: null });
+      setNotice("");
+      navigate("/generating");
+      return;
     } else if (!writtenPrompt(draft)) {
         setNotice("Write the site, or the records it should keep.");
       return;
@@ -86,11 +90,11 @@ export function Home() {
   return (
     <main className="hero">
       <p className="hero-name"><span>site</span>0</p>
-      <h1>{writing ? "Write a sentence. Get a site." : "Paste a site. Open it."}</h1>
+      <h1>{writing ? "Write a sentence. Get a site." : "Paste a site you like."}</h1>
       <p className="sub">
         {writing
           ? "You do not need to know how a website is built. Write the name, the price, the hours, or the place. site0 makes the page."
-          : "Want a website and do not know where to start? Write one sentence, or paste a page you already like."}
+          : "Paste any public page as the example. site0 looks at it and builds a new site for you."}
       </p>
 
       <form className="composer" onSubmit={submit}>

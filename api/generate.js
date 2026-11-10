@@ -1,7 +1,7 @@
 import { clientIp, generatePage, guardGenerate } from "../server/generate.js";
 import { gateGenerate, noteGenerated } from "../server/sites.js";
 
-export const maxDuration = 120;
+export const maxDuration = 180;
 
 function readBody(req) {
   if (req.body && typeof req.body === "object") return Promise.resolve(req.body);
