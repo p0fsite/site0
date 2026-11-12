@@ -33,7 +33,7 @@ Paste a public link when you want that page open in the frame. Switch to writing
 2. Read the site. Change a line if it is wrong.
 3. Connect a Solana wallet and publish. The link looks like `/s/lane-coffee`.
 
-There is no contract yet, so posting does not burn tokens. A later edit stays on the same link.
+Publishing a new site burns 10,000 tokens. A later edit by the same wallet stays on the same link.
 
 ## Run it
 

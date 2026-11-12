@@ -919,18 +919,18 @@ export function Flow() {
       <p className="eyebrow">Capital flow</p>
       <h1>Where a generate goes.</h1>
       <p className="sub">
-        There is no contract yet. Posting a site does not burn tokens, and nobody is paid.
+        Publishing a new site burns 10,000 tokens. They leave circulation. Nobody is paid.
       </p>
       <div className="flow-split">
         <article>
           <p className="label">The site</p>
           <h2>Posted</h2>
-          <p>A connected wallet publishes the site. No tokens leave that wallet.</p>
+          <p>A connected wallet publishes the site and burns 10,000 tokens.</p>
         </article>
         <article>
-          <p className="label">The contract</p>
-          <h2>Not set</h2>
-          <p>A burn comes back only after a contract is added.</p>
+          <p className="label">The burn</p>
+          <h2>10,000 tokens</h2>
+          <p>The tokens leave the wallet that published the site. A later change by that wallet does not burn again.</p>
         </article>
       </div>
       <h2 className="flow-title">In four steps</h2>
@@ -945,7 +945,7 @@ export function Flow() {
         </li>
         <li>
           <span>03</span>
-          <p>Publish saves the site. Nothing is burned.</p>
+          <p>Publish burns 10,000 tokens, then saves the site.</p>
         </li>
         <li>
           <span>04</span>
@@ -1043,7 +1043,7 @@ export function History() {
       <p className="eyebrow">History</p>
       <h1>Published sites.</h1>
       <p className="sub">
-        A new site does not burn tokens. Older burns stay listed below.
+        A new site burns 10,000 tokens. The burns are listed below.
       </p>
       {error ? <p className="warn">{error}</p> : null}
       {!data && !error ? <p className="sub">Reading history.</p> : null}
