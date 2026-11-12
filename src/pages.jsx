@@ -36,7 +36,7 @@ function asUrl(value) {
 }
 
 export function Home() {
-  useTitle("site0");
+  useTitle("w00w");
   const navigate = useNavigate();
   const { draft, setDraft, notice, setNotice } = useDraft();
   const writing = draft.mode === "write";
@@ -89,12 +89,12 @@ export function Home() {
 
   return (
     <main className="hero">
-      <p className="hero-name"><span>site</span>0</p>
+      <p className="hero-name"><span>w</span>00<span>w</span></p>
       <h1>{writing ? "Write a sentence. Get a site." : "Paste a site you like."}</h1>
       <p className="sub">
         {writing
-          ? "You do not need to know how a website is built. Write the name, the price, the hours, or the place. site0 makes the page."
-          : "Paste any public page as the example. site0 looks at it and builds a new site for you."}
+          ? "You do not need to know how a website is built. Write the name, the price, the hours, or the place. w00w makes the page."
+          : "Paste any public page as the example. w00w looks at it and builds a new site for you."}
       </p>
 
       <form className="composer" onSubmit={submit}>
@@ -229,7 +229,7 @@ const WRITE_STEPS = [
 const LOAD_CELLS = 14;
 
 function Writing() {
-  useTitle("Writing · site0");
+  useTitle("Writing · w00w");
   const navigate = useNavigate();
   const { draft, setDraft, setPage } = useDraft();
   const { account, wallet } = useWallet();
@@ -370,7 +370,7 @@ function Writing() {
 }
 
 function Analyzing() {
-  useTitle("Analyzing · site0");
+  useTitle("Analyzing · w00w");
   const navigate = useNavigate();
   const { draft } = useDraft();
   const reading = draft.reading || readSite(draft.url);
@@ -440,7 +440,7 @@ function Analyzing() {
 }
 
 export function ReferenceFailed() {
-  useTitle("Link did not load · site0");
+  useTitle("Link did not load · w00w");
   const { draft, setDraft } = useDraft();
   const navigate = useNavigate();
   const tried = draft.url.trim() || "That link";
@@ -686,7 +686,7 @@ function BuiltPreview() {
 }
 
 export function Preview() {
-  useTitle("Preview · site0");
+  useTitle("Preview · w00w");
   const { draft, page, setDraft } = useDraft();
   const navigate = useNavigate();
   const reading = draft.reading || readSite(draft.url);
@@ -748,7 +748,7 @@ export function Preview() {
 const PAY_STEPS = [["publishing", "Publishing"]];
 
 export function Publish() {
-  useTitle("Publish · site0");
+  useTitle("Publish · w00w");
   const { draft, page, setDraft } = useDraft();
   const { address, account, wallet } = useWallet();
   const navigate = useNavigate();
@@ -888,11 +888,11 @@ export function Publish() {
 }
 
 export function How() {
-  useTitle("How it works · site0");
+  useTitle("How it works · w00w");
   const steps = [
     "You want a website. You do not need to code, or to know how one is built.",
     "Write one sentence about the place, the price, or the hours. Or paste a page you like.",
-    "site0 builds the page. Publish it, then send the link.",
+    "w00w builds the page. Publish it, then send the link.",
   ];
 
   return (
@@ -912,7 +912,7 @@ export function How() {
 }
 
 export function Flow() {
-  useTitle("Capital flow · site0");
+  useTitle("Capital flow · w00w");
 
   return (
     <main className="wide flow">
@@ -937,7 +937,7 @@ export function Flow() {
       <ol className="steps">
         <li>
           <span>01</span>
-          <p>Someone writes one sentence. site0 turns it into a site.</p>
+          <p>Someone writes one sentence. w00w turns it into a site.</p>
         </li>
         <li>
           <span>02</span>
@@ -984,7 +984,7 @@ function when(value) {
 }
 
 export function History() {
-  useTitle("History · site0");
+  useTitle("History · w00w");
   const navigate = useNavigate();
   const { setDraft, setPage } = useDraft();
   const { address } = useWallet();
@@ -1112,13 +1112,13 @@ export function History() {
 }
 
 export function Examples() {
-  useTitle("Examples · site0");
+  useTitle("Examples · w00w");
 
   return (
     <main className="narrow">
       <p className="eyebrow">Examples</p>
       <h1>Three sites.</h1>
-      <p className="sub">Each sentence becomes one site. Open it and site0 builds that site.</p>
+      <p className="sub">Each sentence becomes one site. Open it and w00w builds that site.</p>
       <div className="example-list">
         {examples.map((example) => (
           <Link key={example.id} to={`/examples/${example.id}`} className="example-row">
@@ -1137,7 +1137,7 @@ export function ExampleDetail() {
   const example = examples.find((item) => item.id === id);
   const navigate = useNavigate();
   const { setDraft, setPage } = useDraft();
-  useTitle(example ? `${example.title} · site0` : "Example · site0");
+  useTitle(example ? `${example.title} · w00w` : "Example · w00w");
 
   function build() {
     setPage({ title: example.title, html: "" });
@@ -1182,7 +1182,7 @@ export function Docs() {
   const { slug } = useParams();
   const article = docs.find((item) => item.slug === slug) || docs[0];
   const navigate = useNavigate();
-  useTitle(`${article.title} · Docs · site0`);
+  useTitle(`${article.title} · Docs · w00w`);
 
   return (
     <main className="wide docs">
@@ -1237,7 +1237,7 @@ export function LiveSite() {
   useEffect(() => {
     let gone = false;
     try {
-      const raw = sessionStorage.getItem(`siteo-site:${slug}`) || sessionStorage.getItem(`site0-site:${slug}`) || sessionStorage.getItem(`siteO-site:${slug}`) || sessionStorage.getItem(`p0k-site:${slug}`);
+      const raw = sessionStorage.getItem(`siteo-site:${slug}`) || sessionStorage.getItem(`w00w-site:${slug}`) || sessionStorage.getItem(`site0-site:${slug}`) || sessionStorage.getItem(`siteO-site:${slug}`) || sessionStorage.getItem(`p0k-site:${slug}`);
       if (raw) setStored(JSON.parse(raw));
     } catch {
       setStored(null);
@@ -1255,7 +1255,7 @@ export function LiveSite() {
   const own = Boolean(page.html) && slugify(page.title || "") === slug;
   const html = stored?.html ? String(stored.html) : own ? page.html : "";
   const title = stored?.title || (own ? page.title : "") || slug;
-  useTitle(`${title} · site0`);
+  useTitle(`${title} · w00w`);
 
   if (html) {
     return (
@@ -1267,7 +1267,7 @@ export function LiveSite() {
     <div className="live">
       <p>This site is not published.</p>
       <footer className="badge">
-        <Link to="/">site0</Link>
+        <Link to="/">w00w</Link>
         <span>{cardPath(slug)}</span>
       </footer>
     </div>

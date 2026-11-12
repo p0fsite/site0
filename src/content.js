@@ -103,10 +103,10 @@ export const docs = [
     slug: "who",
     title: "Who it's for",
     paragraph:
-      "site0 is for anyone who wants a website and does not know how to make one. You do not need to code, pick a design, or understand how the web is built. Describe the site in one sentence. site0 makes the page.",
+      "w00w is for anyone who wants a website and does not know how to make one. You do not need to code, pick a design, or understand how the web is built. Describe the site in one sentence. w00w makes the page.",
     steps: [
       "This is for a shop, a clinic, a menu, a service, or any one-page site. If you can say what it does, that is enough.",
-      "You do not write code, buy hosting, or hire someone to design it. site0 turns your sentence into the page.",
+      "You do not write code, buy hosting, or hire someone to design it. w00w turns your sentence into the page.",
       "Read the page, fix a line that is wrong, then publish it and send the link.",
     ],
     example:
@@ -129,24 +129,24 @@ export const docs = [
     slug: "paste",
     title: "Pasting a reference link",
     paragraph:
-      "Paste the address of any public page you like. site0 looks at that page and builds a new site from it. The result is your page, not a copy of theirs.",
+      "Paste the address of any public page you like. w00w looks at that page and builds a new site from it. The result is your page, not a copy of theirs.",
     steps: [
       "Copy a full address that starts with http:// or https://.",
       "Leave Paste a link selected, put the address in the field, and press the arrow.",
       "After the wait, the preview is a new site in that spirit. Say what to change if the name or the details are wrong.",
     ],
     example:
-      "A public address is an example. site0 writes a different site from it. The field starts empty. Nothing is filled in for you.",
+      "A public address is an example. w00w writes a different site from it. The field starts empty. Nothing is filled in for you.",
   },
   {
     slug: "prompt",
     title: "Writing a prompt",
     paragraph:
-      "Write one sentence for the site. Name the place, then the line, the price, the time, or the door. site0 keeps what you wrote.",
+      "Write one sentence for the site. Name the place, then the line, the price, the time, or the door. w00w keeps what you wrote.",
     steps: [
       "Switch to Write it yourself.",
       "Start with the name. Then the line a visitor should see: a price, the hours, a place. Write it in English.",
-      "Press the arrow. site0 keeps the names, prices, and times you wrote.",
+      "Press the arrow. w00w keeps the names, prices, and times you wrote.",
       "Under Database, write what a visitor can save, such as a name and a message. The published site stores those records and lists them.",
       "Publishing a new site burns 10,000 tokens from the connected wallet.",
     ],

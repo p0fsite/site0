@@ -1,20 +1,8 @@
-<p align="center">
-  <img src="public/site0-banner.png" alt="site0. Write a sentence. Get a site." width="100%">
-</p>
-
-<p align="center">
-  <img src="public/site0-pfp.png" alt="site0" width="96">
-</p>
-
-<h1 align="center">site0</h1>
+<h1 align="center">w00w</h1>
 
 <p align="center">
   Paste a page, or write one sentence.<br>
   Get a site you can send.
-</p>
-
-<p align="center">
-  <img src="public/site0-x-pfp.png" alt="site0 mark" width="180">
 </p>
 
 ## The site

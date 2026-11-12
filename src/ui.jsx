@@ -30,7 +30,7 @@ function DotField() {
     let frame = 0;
     let running = true;
     const gap = 16;
-    const alphas = [0.18, 0.32, 0.46, 0.6, 0.74, 0.9];
+    const alphas = [0.05, 0.08, 0.12, 0.16, 0.2, 0.24];
 
     function layout() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -77,7 +77,7 @@ function DotField() {
           ctx.moveTo(g[j].x + 1.5, g[j].y);
           ctx.arc(g[j].x, g[j].y, 1.5, 0, Math.PI * 2);
         }
-        ctx.fillStyle = `rgba(134, 239, 172, ${alphas[i]})`;
+        ctx.fillStyle = `rgba(26, 24, 20, ${alphas[i]})`;
         ctx.fill();
       }
       frame = requestAnimationFrame(draw);
@@ -200,8 +200,8 @@ export function Shell() {
     <div className="app">
       <DotField />
       <header className="top">
-        <Link to="/" className="brand" aria-label="site0">
-          <img src="/site0-pfp.png" alt="" />
+        <Link to="/" className="brand" aria-label="w00w">
+          <span className="mark">w<em>00</em>w</span>
         </Link>
         <nav className="pill">
           {links.map(([label, to]) => (

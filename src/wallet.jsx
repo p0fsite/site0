@@ -10,8 +10,8 @@ const solanaConnectors = toSolanaWalletConnectors({ shouldAutoConnect: false });
 const privyConfig = {
   loginMethods: ["wallet"],
   appearance: {
-    theme: "dark",
-    accentColor: "#86efac",
+    theme: "light",
+    accentColor: "#e10600",
     showWalletLoginFirst: true,
     walletChainType: "solana-only",
     walletList: [

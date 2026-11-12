@@ -1,13 +1,13 @@
 import { cleanSlug, readSiteHtml } from "../server/sites.js";
 
 function missing(slug) {
-  const name = slug || "site0";
+  const name = slug || "w00w";
   return `<!doctype html>
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${name}</title>
-<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#15161b;color:#f4f4f5;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif">
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#f6f4ef;color:#1a1814;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif">
   <p>This site is not published.</p>
 </body>
 </html>`;
